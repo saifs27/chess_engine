@@ -44,7 +44,7 @@ enum{
     A6 = 71, B6, C6, D6, E6, F6, G6, H6,
     A7 = 81, B7, C7, D7, E7, F7, G7, H7,
     A8 = 91, B8, C8, D8, E8, F8, G8, H8, NO_SQ, OFFBOARD
-};
+    };
 
 enum {FALSE, TRUE};
 
@@ -60,9 +60,9 @@ typedef struct{
 typedef struct {
     int move;
     int castlePerm;
-    int enPas;
+    int enPassant;
     int fiftyMove;
-    U64 posKey; //(or hash key) unique number representing position
+    U64 positionKey; //(or hash key) unique number representing position
 
 } S_UNDO;
 
@@ -74,20 +74,20 @@ typedef struct{
     int KingSq[2];
 
     int side;
-    int enPas; 
+    int enPassant; 
     int fiftyMove; 
 
     int ply; // number of half-moves
     int hisPly;
 
-    U64 posKey; 
+    U64 positionKey; 
 
     int castlePerm;
 
-    int pceNum[13]; 
-    int bigPce[2]; // all pieces (no pawns) 
-    int majPce[2]; // major pieces: rooks and queens
-    int minPce[2]; // minor pieces: knights and bishops
+    int PieceNumber[13]; 
+    int BigPiece[2]; // all pieces (no pawns) 
+    int MajorPiece[2]; // rooks and queens
+    int MinorPiece[2]; // knights and bishops
     int material[2];
 
     S_UNDO history[MAXGAMEMOVES];
@@ -132,21 +132,21 @@ extern U64 ClearMask[64];
 extern U64 PieceKeys[13][120];
 extern U64 SideKey;
 extern U64 CastleKeys[16]; // uses 4 bits to represent castling rights
-extern char PceChar[];
+extern char PieceChar[];
 extern char SideChar[];
 extern char RankChar[];
 extern char FileChar[];
 
 extern int PieceBig[13];
-extern int PieceMaj[13];
-extern int PieceMin[13];
-extern int PieceVal[13]; // piece value
-extern int PieceCol[13]; // piece color
+extern int PieceMajor[13];
+extern int PieceMinor[13];
+extern int PieceValue[13]; 
+extern int PieceColor[13]; 
 
-extern int FilesBrd[BRD_SQ_NUM];
-extern int RanksBrd[BRD_SQ_NUM];
+extern int FilesBoard[BRD_SQ_NUM];
+extern int RanksBoard[BRD_SQ_NUM];
 
-extern int IsKnight[13]; // Check if piece is knight
+extern int IsKnight[13]; 
 extern int IsKing[13];
 extern int IsRookQueen[13];
 extern int IsBishopQueen[13];
@@ -159,12 +159,12 @@ extern int IsBishopQueen[13];
 extern void AllInit();
 
 // bitboards.c
-extern void PrintBitBoard(U64 bb); 
+extern void print_bitboard(U64 bb); 
 extern int PopBit(U64 *bb); // takes the first bit, returns the index of bit, and sets bit to 0.
 extern int CountBits(U64 b); // counts number of bits
 
 // hashkeys.c
-extern U64 GeneratePosKey(const S_BOARD *pos);
+extern U64 generate_position_key(const S_BOARD *pos);
 
 // board.c
 extern void ResetBoard(S_BOARD *pos);
@@ -174,6 +174,6 @@ extern void UpdateListMaterial(S_BOARD *pos);
 extern int CheckBoard(const S_BOARD *pos);
 
 // attack.c
-extern int SqAttacked(const int sq, const int side, const S_BOARD *pos);
+extern int square_attacked(const int sq, const int side, const S_BOARD *pos);
 
 #endif

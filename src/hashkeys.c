@@ -1,7 +1,7 @@
 #include "defs.h"
 #include <stdio.h>
 
-U64 GeneratePosKey(const S_BOARD *pos) {
+U64 generate_position_key(const S_BOARD *pos) {
     int sq = 0;
     U64 finalKey = 0;
     int piece = EMPTY;
@@ -19,9 +19,9 @@ U64 GeneratePosKey(const S_BOARD *pos) {
         finalKey ^= SideKey;
     }
 
-    if (pos -> enPas != NO_SQ) {
-        ASSERT(pos -> enPas >= 0 && pos -> enPas < BRD_SQ_NUM);
-        finalKey ^= PieceKeys[EMPTY][pos -> enPas];
+    if (pos -> enPassant != NO_SQ) {
+        ASSERT(pos -> enPassant >= 0 && pos -> enPassant < BRD_SQ_NUM);
+        finalKey ^= PieceKeys[EMPTY][pos -> enPassant];
     }
 
     ASSERT(pos -> castlePerm >= 0 && pos -> castlePerm < BRD_SQ_NUM);

@@ -1,11 +1,11 @@
 #include "defs.h"
 
-const int NDir[8] = {-8, -19, -21, -12, 8, 19, 21, 12}; // knight
-const int RDir[8] = {-1, -10, 1, 10}; // rook
-const int BDir[8] = {-9, -11, 11, 9}; // bishop
-const int KDir[8] = {-1, -10, 1, 10, -9, -11, 11, 9}; // king
+const int KnightDirection[8] = {-8, -19, -21, -12, 8, 19, 21, 12}; // knight
+const int RookDirection[8] = {-1, -10, 1, 10}; // rook
+const int BishopDirection[8] = {-9, -11, 11, 9}; // bishop
+const int KingDirection[8] = {-1, -10, 1, 10, -9, -11, 11, 9}; // king
 
-int SqAttacked(const int sq, const int side, const S_BOARD *pos){
+int square_attacked(const int sq, const int side, const S_BOARD *pos){
     int pce, i, t_sq, dir;
     // pawns
     if (side == WHITE){
@@ -21,20 +21,20 @@ int SqAttacked(const int sq, const int side, const S_BOARD *pos){
 
     // knights
     for (i = 0; i < 8; i++){
-        pce = pos -> pieces[sq + NDir[i]];
-        if (IsN(pce) && PieceCol[pce] == side){
+        pce = pos -> pieces[sq + KnightDirection[i]];
+        if (IsN(pce) && PieceColor[pce] == side){
             return TRUE;
         }
     }
 
     // rooks, queens
     for (i = 0; i < 4; i++){
-        dir = RDir[i];
+        dir = RookDirection[i];
         t_sq = sq + dir; 
         pce = pos -> pieces[t_sq];
         while (pce != OFFBOARD){
             if (pce != EMPTY){
-                if(IsRQ(pce) && PieceCol[pce] == side){
+                if(IsRQ(pce) && PieceColor[pce] == side){
                     return TRUE;
                 }
                 break;
@@ -46,12 +46,12 @@ int SqAttacked(const int sq, const int side, const S_BOARD *pos){
 
     // bishops, queens
     for (i = 0; i < 4; i++){
-        dir = BDir[i];
+        dir = BishopDirection[i];
         t_sq = sq + dir; 
         pce = pos -> pieces[t_sq];
         while (pce != OFFBOARD){
             if (pce != EMPTY){
-                if(IsBQ(pce) && PieceCol[pce] == side){
+                if(IsBQ(pce) && PieceColor[pce] == side){
                     return TRUE;
                 }
                 break;
@@ -63,8 +63,8 @@ int SqAttacked(const int sq, const int side, const S_BOARD *pos){
 
     // kings
     for (i = 0; i < 8; i++){
-        pce = pos -> pieces[sq + KDir[i]];
-        if (IsK(pce) && PieceCol[pce] == side){
+        pce = pos -> pieces[sq + KingDirection[i]];
+        if (IsK(pce) && PieceColor[pce] == side){
             return TRUE;
         }
     } 

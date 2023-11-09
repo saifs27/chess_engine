@@ -19,7 +19,7 @@ int CheckBoard(const S_BOARD *pos){
 
     // check piece lists
     for (t_piece = wP; t_piece <= bK; t_piece++){
-        for (t_pce_num = 0; t_pce_num < pos -> pceNum[t_piece]; t_pce_num++){
+        for (t_pce_num = 0; t_pce_num < pos -> PieceNumber[t_piece]; t_pce_num++){
             sq120 = pos -> PieceList[t_piece][t_pce_num];
             ASSERT(pos -> pieces[sq120] == t_piece);
         }
@@ -30,25 +30,25 @@ int CheckBoard(const S_BOARD *pos){
         sq120 = SQ120(sq64);
         t_piece = pos -> pieces[sq120];
         t_pceNum[t_piece]++;
-        color = PieceCol[t_piece];
+        color = PieceColor[t_piece];
         if (PieceBig[t_piece] == TRUE) t_bigPce[color]++;
-        if (PieceMin[t_piece] == TRUE) t_minPce[color]++;
-        if (PieceMaj[t_piece] == TRUE) t_majPce[color]++;
+        if (PieceMinor[t_piece] == TRUE) t_minPce[color]++;
+        if (PieceMajor[t_piece] == TRUE) t_majPce[color]++;
 
-        t_material[color] += PieceVal[t_piece];
+        t_material[color] += PieceValue[t_piece];
     }
 
     for (t_piece = wP; t_piece <= bK; t_piece++){
-        ASSERT(t_pceNum[t_piece] == pos -> pceNum[t_piece]);
+        ASSERT(t_pceNum[t_piece] == pos -> PieceNumber[t_piece]);
     }
 
     // check bitboard count
     pcount = CNT(t_pawns[WHITE]);
-    ASSERT(pcount = pos -> pceNum[wP]);
+    ASSERT(pcount = pos -> PieceNumber[wP]);
     pcount = CNT(t_pawns[BLACK]);
-    ASSERT(pcount = pos -> pceNum[bP]);
+    ASSERT(pcount = pos -> PieceNumber[bP]);
     pcount = CNT(t_pawns[BOTH]);
-    ASSERT(pcount = pos -> pceNum[wP] + pos -> pceNum[wP]);
+    ASSERT(pcount = pos -> PieceNumber[wP] + pos -> PieceNumber[wP]);
 
     // check bitboard squares
     while (t_pawns[WHITE]){
@@ -67,16 +67,16 @@ int CheckBoard(const S_BOARD *pos){
     }
 
     ASSERT(t_material[WHITE] == pos -> material[WHITE] && t_material[BLACK] == pos -> material[BLACK]);
-    ASSERT(t_minPce[WHITE] == pos -> minPce[WHITE] && t_minPce[BLACK] == pos -> minPce[BLACK]);
-    ASSERT(t_majPce[WHITE] == pos -> majPce[WHITE] && t_majPce[BLACK] == pos -> majPce[BLACK]);
-    ASSERT(t_bigPce[WHITE] == pos -> bigPce[WHITE] && t_bigPce[BLACK] == pos -> bigPce[BLACK]);
+    ASSERT(t_minPce[WHITE] == pos -> MinorPiece[WHITE] && t_minPce[BLACK] == pos -> MinorPiece[BLACK]);
+    ASSERT(t_majPce[WHITE] == pos -> MajorPiece[WHITE] && t_majPce[BLACK] == pos -> MajorPiece[BLACK]);
+    ASSERT(t_bigPce[WHITE] == pos -> BigPiece[WHITE] && t_bigPce[BLACK] == pos -> BigPiece[BLACK]);
 
     ASSERT(pos -> side == WHITE || pos -> side == BLACK);
-    ASSERT(GeneratePosKey(pos) == pos -> posKey);
+    ASSERT(generate_position_key(pos) == pos -> positionKey);
 
     // check en passant
-    ASSERT(pos -> enPas == NO_SQ || (RanksBrd[pos -> enPas] == RANK_6 && pos -> side == WHITE)
-            || (RanksBrd[pos -> enPas] == RANK_3 && pos -> side == BLACK));
+    ASSERT(pos -> enPassant == NO_SQ || (RanksBoard[pos -> enPassant] == RANK_6 && pos -> side == WHITE)
+            || (RanksBoard[pos -> enPassant] == RANK_3 && pos -> side == BLACK));
 
     ASSERT(pos -> pieces[pos -> KingSq[WHITE]] == wK);
     ASSERT(pos -> pieces[pos -> KingSq[BLACK]] == bK);
@@ -91,16 +91,16 @@ void UpdateListMaterial(S_BOARD *pos){
         sq = i;
         piece = pos -> pieces[i];
         if (piece != OFFBOARD && piece != EMPTY){
-            color = PieceCol[piece];
-            if (PieceBig[piece] == TRUE) pos -> bigPce[color]++;
-            if (PieceMaj[piece] == TRUE) pos -> majPce[color]++;
-            if (PieceMin[piece] == TRUE) pos -> minPce[color]++;
+            color = PieceColor[piece];
+            if (PieceBig[piece] == TRUE) pos -> BigPiece[color]++;
+            if (PieceMajor[piece] == TRUE) pos -> MajorPiece[color]++;
+            if (PieceMinor[piece] == TRUE) pos -> MinorPiece[color]++;
 
-            pos -> material[color] += PieceVal[piece];
+            pos -> material[color] += PieceValue[piece];
 
             // piece list
-            pos -> PieceList[piece][pos -> pceNum[piece]] = sq;
-            pos -> pceNum[piece]++;
+            pos -> PieceList[piece][pos -> PieceNumber[piece]] = sq;
+            pos -> PieceNumber[piece]++;
 
             if (piece == wK) pos -> KingSq[WHITE] = sq;
             if (piece == bK) pos -> KingSq[BLACK] = sq;
@@ -216,11 +216,11 @@ int ParseFen(char *fen, S_BOARD *pos){
         ASSERT(file >= FILE_A && file <= FILE_H);
         ASSERT(rank >= RANK_1 && file <= RANK_8);
 
-        pos -> enPas = FR2SQ(file, rank);
+        pos -> enPassant = FR2SQ(file, rank);
 
     }
 
-    pos -> posKey = GeneratePosKey(pos);
+    pos -> positionKey = generate_position_key(pos);
     UpdateListMaterial(pos);
 
     return 0;
@@ -239,28 +239,28 @@ void ResetBoard(S_BOARD *pos) {
     }
 
     for (i = 0; i < 3; i++){
-        pos -> bigPce[i] = 0;
-        pos -> majPce[i] = 0; 
-        pos -> minPce[i] = 0;
+        pos -> BigPiece[i] = 0;
+        pos -> MajorPiece[i] = 0; 
+        pos -> MinorPiece[i] = 0;
         pos -> pawns[i] = 0ULL;
     }
     
     // reset piece number to 0
     for (i = 0; i < 13; i++){
-        pos -> pceNum[i] = 0;
+        pos -> PieceNumber[i] = 0;
     }
 
     pos -> KingSq[WHITE] = pos -> KingSq[BLACK] = NO_SQ;
 
     pos -> side = BOTH;
-    pos -> enPas = NO_SQ;
+    pos -> enPassant = NO_SQ;
     pos -> fiftyMove = 0;
 
     pos -> ply = 0;
     pos -> hisPly = 0;
 
     pos -> castlePerm = 0;
-    pos -> posKey = 0ULL;
+    pos -> positionKey = 0ULL;
     
 }
 
@@ -273,7 +273,7 @@ void PrintBoard(const S_BOARD *pos){
         for (file = FILE_A; file <= FILE_H; file++){
             sq = FR2SQ(file, rank);
             piece = pos -> pieces[sq];
-            printf("%3c", PceChar[piece]);
+            printf("%3c", PieceChar[piece]);
         }
         printf("\n"); 
     }
@@ -282,11 +282,11 @@ void PrintBoard(const S_BOARD *pos){
 
     printf("\n");
     printf("side: %c\n", SideChar[pos->side]);
-    printf("enPas:%d\n", pos->enPas);
+    printf("enPassant:%d\n", pos->enPassant);
     printf("castle:%c%c%c%c\n",
             pos -> castlePerm & WKC ? 'K': '-',
             pos -> castlePerm & WQC ? 'Q': '-',
             pos -> castlePerm & BKC ? 'k': '-',
             pos -> castlePerm & BQC ? 'q': '-');
-    printf("PosKey:%llX\n", pos ->posKey); // print hashkey in hexadecimal
+    printf("PositionKey:%llX\n", pos ->positionKey); // print hashkey in hexadecimal
 }
