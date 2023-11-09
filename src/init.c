@@ -22,7 +22,7 @@ U64 CastleKeys[16]; // uses 4 bits to represent castling rights
 int FilesBoard[BRD_SQ_NUM];
 int RanksBoard[BRD_SQ_NUM];
 
-void InitFilesRanksBrd(){
+void init_filesranks_board(){
 
     int sq = A1;
     int sq64 = 0;
@@ -34,14 +34,14 @@ void InitFilesRanksBrd(){
 
     for (int rank = RANK_1; rank <= RANK_8; rank++){
         for (int file = FILE_A; file <= FILE_H; file++){
-            sq = FR2SQ(file, rank);
+            sq = FILE_RANK_TO_SQ120(file, rank);
             FilesBoard[sq] = file;
             RanksBoard[sq] = rank;
         }
     }   
 }
 
-void InitHashKeys() {
+void init_hashkeys() {
     for (int i = 0; i < 13;  i++) {
         for (int j = 0; j < 120; j++){
             PieceKeys[i][j] = RAND_64;
@@ -53,7 +53,7 @@ void InitHashKeys() {
     }
 }
 
-void InitBitMasks(){
+void init_bitmasks(){
     int i = 0;
 
     // initialize values to 0
@@ -72,7 +72,7 @@ void InitBitMasks(){
 
 
 
-void InitSq120To64(){
+void init_sq120_to_64(){
     int i = 0;
     int file = FILE_A;
     int rank = RANK_1;
@@ -94,7 +94,7 @@ void InitSq120To64(){
     {
         for (file = FILE_A; file <= FILE_H; file++)
         {
-            sq = FR2SQ(file, rank);
+            sq = FILE_RANK_TO_SQ120(file, rank);
             Sq64ToSq120[sq64] = sq;
             Sq120ToSq64[sq] = sq64;
             sq64++; 
@@ -102,9 +102,9 @@ void InitSq120To64(){
     }
 }
 
-void AllInit(){
-    InitSq120To64();
-    InitBitMasks();
-    InitHashKeys();
-    InitFilesRanksBrd();
+void all_init(){
+    init_sq120_to_64();
+    init_bitmasks();
+    init_hashkeys();
+    init_filesranks_board();
 }

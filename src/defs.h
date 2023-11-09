@@ -49,7 +49,7 @@ enum{
 enum {FALSE, TRUE};
 
 // Castling Permisions:
-enum {WKC = 1, WQC = 2, BKC = 4, BQC = 8};
+enum {WhiteKingsideCastle = 1, WhiteQueensideCastle = 2, BlackKingsideCastle = 4, BlackQueensideCastle = 8};
 
 typedef struct{
     int move;
@@ -112,12 +112,10 @@ typedef struct{
       
 
 /* MACROS */
-#define FR2SQ(f, r) ((21 + (f)) + ((r) * 10)) // convert file and rank to 120 square coordinates
+#define FILE_RANK_TO_SQ120(f, r) ((21 + (f)) + ((r) * 10)) // convert file and rank to 120 square coordinates
 #define SQ64(sq120) (Sq120ToSq64[(sq120)]) // convert 120 based index to 64
 #define SQ120(sq64) (Sq64ToSq120[(sq64)])
-#define POP(b) PopBit(b) // takes the first bit, returns the index of bit, and sets bit to 0.
-#define CNT(b) CountBits(b)
-#define CLRBIT(bb, sq) ((bb) &= ClearMask[(sq)])
+#define CLEARBIT(bb, sq) ((bb) &= ClearMask[(sq)])
 #define SETBIT(bb, sq) ((bb) |= SetMask[(sq)])
 #define IsBQ(p) (IsBishopQueen[(p)])
 #define IsRQ(p) (IsRookQueen[(p)])
@@ -156,22 +154,22 @@ extern int IsBishopQueen[13];
 /* FUNCTIONS */
 
 // init.c 
-extern void AllInit();
+extern void all_init();
 
 // bitboards.c
 extern void print_bitboard(U64 bb); 
-extern int PopBit(U64 *bb); // takes the first bit, returns the index of bit, and sets bit to 0.
-extern int CountBits(U64 b); // counts number of bits
+extern int pop_bit(U64 *bb); 
+extern int count_bits(U64 b); 
 
 // hashkeys.c
 extern U64 generate_position_key(const S_BOARD *pos);
 
 // board.c
-extern void ResetBoard(S_BOARD *pos);
-extern int ParseFen(char *fen, S_BOARD *pos);
-extern void PrintBoard(const S_BOARD *pos);
-extern void UpdateListMaterial(S_BOARD *pos);
-extern int CheckBoard(const S_BOARD *pos);
+extern void reset_board(S_BOARD *pos);
+extern int parse_fen(char *fen, S_BOARD *pos);
+extern void print_board(const S_BOARD *pos);
+extern void update_list_material(S_BOARD *pos);
+extern int check_board(const S_BOARD *pos);
 
 // attack.c
 extern int square_attacked(const int sq, const int side, const S_BOARD *pos);

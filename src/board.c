@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "defs.h"
 
-int CheckBoard(const S_BOARD *pos){
+int check_board(const S_BOARD *pos){
     // temporary variables
     int t_pceNum[13] = {0,0,0,0,0,0,0,0,0,0,0,0,0};
     int t_bigPce[2] = {0,0};
@@ -43,26 +43,26 @@ int CheckBoard(const S_BOARD *pos){
     }
 
     // check bitboard count
-    pcount = CNT(t_pawns[WHITE]);
+    pcount = count_bits(t_pawns[WHITE]);
     ASSERT(pcount = pos -> PieceNumber[wP]);
-    pcount = CNT(t_pawns[BLACK]);
+    pcount = count_bits(t_pawns[BLACK]);
     ASSERT(pcount = pos -> PieceNumber[bP]);
-    pcount = CNT(t_pawns[BOTH]);
+    pcount = count_bits(t_pawns[BOTH]);
     ASSERT(pcount = pos -> PieceNumber[wP] + pos -> PieceNumber[wP]);
 
     // check bitboard squares
     while (t_pawns[WHITE]){
-        sq64 = POP(&t_pawns[WHITE]);
+        sq64 = pop_bit(&t_pawns[WHITE]);
         ASSERT(pos-> pieces[SQ120(sq64)] == wP);
     }
 
     while (t_pawns[BLACK]){
-        sq64 = POP(&t_pawns[BLACK]);
+        sq64 = pop_bit(&t_pawns[BLACK]);
         ASSERT(pos-> pieces[SQ120(sq64)] == bP);
     }
 
     while (t_pawns[BOTH]){
-        sq64 = POP(&t_pawns[BOTH]);
+        sq64 = pop_bit(&t_pawns[BOTH]);
         ASSERT(pos-> pieces[SQ120(sq64)] == wP || (pos -> pieces[SQ120(sq64)] == bP));
     }
 
@@ -84,7 +84,7 @@ int CheckBoard(const S_BOARD *pos){
     return TRUE;
 }
 
-void UpdateListMaterial(S_BOARD *pos){
+void update_list_material(S_BOARD *pos){
     int piece, sq, i, color;
 
     for ( i = 0; i < BRD_SQ_NUM; i++){
@@ -118,7 +118,7 @@ void UpdateListMaterial(S_BOARD *pos){
 }
 
 
-int ParseFen(char *fen, S_BOARD *pos){
+int parse_fen(char *fen, S_BOARD *pos){
     ASSERT(fen != NULL);
     ASSERT(pos != NULL);
 
@@ -130,7 +130,7 @@ int ParseFen(char *fen, S_BOARD *pos){
     int sq64 = 0;
     int sq120 = 0;
 
-    ResetBoard(pos);
+    reset_board(pos);
 
     while ((rank >= RANK_1) && *fen){
         count = 1;
@@ -197,10 +197,10 @@ int ParseFen(char *fen, S_BOARD *pos){
             break;
         }
         switch(*fen){
-            case 'K': pos -> castlePerm |= WKC; break;
-            case 'Q': pos -> castlePerm |= WQC; break;
-            case 'k': pos -> castlePerm |= BKC; break;
-            case 'q': pos -> castlePerm |= BQC; break;
+            case 'K': pos -> castlePerm |= WhiteKingsideCastle; break;
+            case 'Q': pos -> castlePerm |= WhiteQueensideCastle; break;
+            case 'k': pos -> castlePerm |= BlackKingsideCastle; break;
+            case 'q': pos -> castlePerm |= BlackQueensideCastle; break;
             default: break;
         }
         fen++;
@@ -216,18 +216,18 @@ int ParseFen(char *fen, S_BOARD *pos){
         ASSERT(file >= FILE_A && file <= FILE_H);
         ASSERT(rank >= RANK_1 && file <= RANK_8);
 
-        pos -> enPassant = FR2SQ(file, rank);
+        pos -> enPassant = FILE_RANK_TO_SQ120(file, rank);
 
     }
 
     pos -> positionKey = generate_position_key(pos);
-    UpdateListMaterial(pos);
+    update_list_material(pos);
 
     return 0;
 }
 
 
-void ResetBoard(S_BOARD *pos) {
+void reset_board(S_BOARD *pos) {
     int i = 0;
 
     for (i  = 0; i < BRD_SQ_NUM; i++){
@@ -264,14 +264,14 @@ void ResetBoard(S_BOARD *pos) {
     
 }
 
-void PrintBoard(const S_BOARD *pos){
+void print_board(const S_BOARD *pos){
     int file, rank, sq, piece;
 
     printf("\nGame Board:\n\n");
 
     for (rank = RANK_8; rank >= RANK_1; rank--){
         for (file = FILE_A; file <= FILE_H; file++){
-            sq = FR2SQ(file, rank);
+            sq = FILE_RANK_TO_SQ120(file, rank);
             piece = pos -> pieces[sq];
             printf("%3c", PieceChar[piece]);
         }
@@ -284,9 +284,9 @@ void PrintBoard(const S_BOARD *pos){
     printf("side: %c\n", SideChar[pos->side]);
     printf("enPassant:%d\n", pos->enPassant);
     printf("castle:%c%c%c%c\n",
-            pos -> castlePerm & WKC ? 'K': '-',
-            pos -> castlePerm & WQC ? 'Q': '-',
-            pos -> castlePerm & BKC ? 'k': '-',
-            pos -> castlePerm & BQC ? 'q': '-');
+            pos -> castlePerm & WhiteKingsideCastle ? 'K': '-',
+            pos -> castlePerm & WhiteQueensideCastle ? 'Q': '-',
+            pos -> castlePerm & BlackKingsideCastle ? 'k': '-',
+            pos -> castlePerm & BlackQueensideCastle ? 'q': '-');
     printf("PositionKey:%llX\n", pos ->positionKey); // print hashkey in hexadecimal
 }
