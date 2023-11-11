@@ -53,7 +53,7 @@ enum {WhiteKingsideCastle = 1, WhiteQueensideCastle = 2, BlackKingsideCastle = 4
 
 typedef struct{
     int move;
-    int score;
+    int score; // move ordering
 } S_MOVE;
 
 // Undo move structure
@@ -98,33 +98,48 @@ typedef struct{
 } S_BOARD;
 
 /* GAME MOVE */
+
+/*
+Use bits to store game information
+
+0000 0000 0000 0000 0000 0111 1111 -> From square:       0x7F
+0000 0000 0000 0011 1111 1000 0000 -> To square : >>  7, 0x7F
+0000 0000 0011 1100 0000 0000 0000 -> Captured  : >> 14, 0xF
+0000 0000 0100 0000 0000 0000 0000 -> En passant:        0x40000
+0000 0000 1000 0000 0000 0000 0000 -> Pawn start:        0x80000
+0000 1111 0000 0000 0000 0000 0000 -> Promotion : >> 20, 0xF
+0001 0000 0000 0000 0000 0000 0000 -> Castling  :        0x1000000
+*/
+
 #define FROMSQ(m) ((m) & 0x7F)
 #define TOSQ(m) (((m)>>7) & 0x7F)
 #define CAPTURED(m) (((m)>>14) & 0xF)
 #define PROMOTED(m) (((m)>>20) & 0xF)
 
-#define MFLAGEP 0x40000
-#define MFLAGPS 0x80000
-#define MFLAGCA 0x1000000
+#define MOVE_FLAG_ENPASSANT  0x40000
+#define MOVE_FLAG_PAWN_START 0x80000
+#define MOVE_FLAG_CASTLE 0x1000000
 
-#define MFLAGCAP 0x7C000
-#define MFLAGPROM 0xF00000
+#define MOVE_FLAG_CAPTURED 0x7C000
+#define MOVE_FLAG_PROMOTION 0xF00000
       
 
 /* MACROS */
 #define FILE_RANK_TO_SQ120(f, r) ((21 + (f)) + ((r) * 10)) 
-#define SQ64(sq120) (Sq120ToSq64[(sq120)]) 
 #define CLEARBIT(bb, sq) ((bb) &= ClearMask[(sq)])
 #define SETBIT(bb, sq) ((bb) |= SetMask[(sq)])
 
 /* GLOBALS */
 extern int Sq120ToSq64[BRD_SQ_NUM]; 
 extern int Sq64ToSq120[64];
+
 extern U64 SetMask[64];
 extern U64 ClearMask[64];
+
 extern U64 PieceKeys[13][120];
 extern U64 SideKey;
-extern U64 CastleKeys[16]; // uses 4 bits to represent castling rights
+extern U64 CastleKeys[16];
+
 extern char PieceChar[];
 extern char SideChar[];
 extern char RankChar[];

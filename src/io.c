@@ -14,8 +14,8 @@ char* print_move(const int move) {
     static char MoveString[6];
     int FileFrom = FilesBoard[FROMSQ(move)];
     int RankFrom = RanksBoard[FROMSQ(move)];
-    int FileTo = FilesBoard[FROMSQ(move)];
-    int RankTo = RanksBoard[FROMSQ(move)];
+    int FileTo = FilesBoard[TOSQ(move)];
+    int RankTo = RanksBoard[TOSQ(move)];
 
     int promoted = PROMOTED(move);
 
@@ -30,11 +30,11 @@ char* print_move(const int move) {
         else if (!IsBishopQueen[promoted] && IsRookQueen[promoted]){
             pchar = 'R';
         }
-        sprintf(MoveString, "%c%c%c%c", ('a' + FileFrom), ('1'+ RankFrom), ('a' + FileTo), ('1' + RankTo), pchar);
+        sprintf(MoveString, "%c%c%c%c%c", ('a' + FileFrom), ('1'+ RankFrom), ('a' + FileTo), ('1' + RankTo), pchar);
          
     }
     else {
-        sprintf(MoveString, "%c%c%c", ('a' + FileFrom), ('1'+ RankFrom), ('a' + FileTo), ('1' + RankTo));
+        sprintf(MoveString, "%c%c%c%c", ('a' + FileFrom), ('1'+ RankFrom), ('a' + FileTo), ('1' + RankTo));
     }
 
     return MoveString;
