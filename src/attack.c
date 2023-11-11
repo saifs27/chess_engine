@@ -22,7 +22,7 @@ int square_attacked(const int sq, const int side, const S_BOARD *pos){
     // knights
     for (i = 0; i < 8; i++){
         pce = pos -> pieces[sq + KnightDirection[i]];
-        if (IsN(pce) && PieceColor[pce] == side){
+        if (IsKnight[pce] && PieceColor[pce] == side){
             return TRUE;
         }
     }
@@ -34,7 +34,7 @@ int square_attacked(const int sq, const int side, const S_BOARD *pos){
         pce = pos -> pieces[t_sq];
         while (pce != OFFBOARD){
             if (pce != EMPTY){
-                if(IsRQ(pce) && PieceColor[pce] == side){
+                if(IsRookQueen[pce] && PieceColor[pce] == side){
                     return TRUE;
                 }
                 break;
@@ -51,7 +51,7 @@ int square_attacked(const int sq, const int side, const S_BOARD *pos){
         pce = pos -> pieces[t_sq];
         while (pce != OFFBOARD){
             if (pce != EMPTY){
-                if(IsBQ(pce) && PieceColor[pce] == side){
+                if(IsBishopQueen[pce] && PieceColor[pce] == side){
                     return TRUE;
                 }
                 break;
@@ -64,7 +64,7 @@ int square_attacked(const int sq, const int side, const S_BOARD *pos){
     // kings
     for (i = 0; i < 8; i++){
         pce = pos -> pieces[sq + KingDirection[i]];
-        if (IsK(pce) && PieceColor[pce] == side){
+        if (IsKing[pce] && PieceColor[pce] == side){
             return TRUE;
         }
     } 

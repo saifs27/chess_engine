@@ -112,18 +112,13 @@ typedef struct{
       
 
 /* MACROS */
-#define FILE_RANK_TO_SQ120(f, r) ((21 + (f)) + ((r) * 10)) // convert file and rank to 120 square coordinates
-#define SQ64(sq120) (Sq120ToSq64[(sq120)]) // convert 120 based index to 64
-#define SQ120(sq64) (Sq64ToSq120[(sq64)])
+#define FILE_RANK_TO_SQ120(f, r) ((21 + (f)) + ((r) * 10)) 
+#define SQ64(sq120) (Sq120ToSq64[(sq120)]) 
 #define CLEARBIT(bb, sq) ((bb) &= ClearMask[(sq)])
 #define SETBIT(bb, sq) ((bb) |= SetMask[(sq)])
-#define IsBQ(p) (IsBishopQueen[(p)])
-#define IsRQ(p) (IsRookQueen[(p)])
-#define IsN(p) (IsKnight[(p)])
-#define IsK(p) (IsKing[(p)])
 
 /* GLOBALS */
-extern int Sq120ToSq64[BRD_SQ_NUM]; // Converts 120 square board to 64 square board
+extern int Sq120ToSq64[BRD_SQ_NUM]; 
 extern int Sq64ToSq120[64];
 extern U64 SetMask[64];
 extern U64 ClearMask[64];
@@ -173,5 +168,9 @@ extern int check_board(const S_BOARD *pos);
 
 // attack.c
 extern int square_attacked(const int sq, const int side, const S_BOARD *pos);
+
+// io.c
+extern char* print_square(const int sq);
+extern char* print_move(const int move);
 
 #endif

@@ -27,7 +27,7 @@ int check_board(const S_BOARD *pos){
 
     // check piece count and other counters
     for (sq64 = 0; sq64 < 64; sq64++){
-        sq120 = SQ120(sq64);
+        sq120 = Sq64ToSq120[sq64];
         t_piece = pos -> pieces[sq120];
         t_pceNum[t_piece]++;
         color = PieceColor[t_piece];
@@ -53,17 +53,17 @@ int check_board(const S_BOARD *pos){
     // check bitboard squares
     while (t_pawns[WHITE]){
         sq64 = pop_bit(&t_pawns[WHITE]);
-        ASSERT(pos-> pieces[SQ120(sq64)] == wP);
+        ASSERT(pos-> pieces[Sq64ToSq120[sq64]] == wP);
     }
 
     while (t_pawns[BLACK]){
         sq64 = pop_bit(&t_pawns[BLACK]);
-        ASSERT(pos-> pieces[SQ120(sq64)] == bP);
+        ASSERT(pos-> pieces[Sq64ToSq120[sq64]] == bP);
     }
 
     while (t_pawns[BOTH]){
         sq64 = pop_bit(&t_pawns[BOTH]);
-        ASSERT(pos-> pieces[SQ120(sq64)] == wP || (pos -> pieces[SQ120(sq64)] == bP));
+        ASSERT(pos-> pieces[Sq64ToSq120[sq64]] == wP || (pos -> pieces[Sq64ToSq120[sq64]] == bP));
     }
 
     ASSERT(t_material[WHITE] == pos -> material[WHITE] && t_material[BLACK] == pos -> material[BLACK]);
@@ -106,12 +106,12 @@ void update_list_material(S_BOARD *pos){
             if (piece == bK) pos -> KingSq[BLACK] = sq;
 
             if (piece == wP){
-                SETBIT(pos -> pawns[WHITE], SQ64(sq));
-                SETBIT(pos -> pawns[BOTH], SQ64(sq));
+                SETBIT(pos -> pawns[WHITE], Sq120ToSq64[sq]);
+                SETBIT(pos -> pawns[BOTH], Sq120ToSq64[sq]);
             }
             else if (piece == bP){
-                SETBIT(pos -> pawns[BLACK], SQ64(sq));
-                SETBIT(pos -> pawns[BOTH], SQ64(sq));
+                SETBIT(pos -> pawns[BLACK], Sq120ToSq64[sq]);
+                SETBIT(pos -> pawns[BOTH], Sq120ToSq64[sq]);
             }
         }
     }
@@ -176,7 +176,7 @@ int parse_fen(char *fen, S_BOARD *pos){
         // place pieces on appropriate squares
         for (i = 0; i < count; i++){
             sq64 = rank * 8 + file;
-            sq120 = SQ120(sq64);
+            sq120 = Sq64ToSq120[sq64];
             if (piece != EMPTY){
                 pos -> pieces[sq120] = piece;
             }
@@ -235,7 +235,7 @@ void reset_board(S_BOARD *pos) {
     }
 
     for (i  = 0; i < 64; i++){
-        pos -> pieces[SQ120(i)] = EMPTY;
+        pos -> pieces[Sq64ToSq120[i]] = EMPTY;
     }
 
     for (i = 0; i < 3; i++){
