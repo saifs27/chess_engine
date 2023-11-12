@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "defs.h"
 
-int check_board(const S_BOARD *pos){
+int board_check(const S_BOARD *pos){
     // temporary variables
     int t_pceNum[13] = {0,0,0,0,0,0,0,0,0,0,0,0,0};
     int t_bigPce[2] = {0,0};
@@ -130,7 +130,7 @@ int parse_fen(char *fen, S_BOARD *pos){
     int sq64 = 0;
     int sq120 = 0;
 
-    reset_board(pos);
+    board_reset(pos);
 
     while ((rank >= RANK_1) && *fen){
         count = 1;
@@ -227,7 +227,7 @@ int parse_fen(char *fen, S_BOARD *pos){
 }
 
 
-void reset_board(S_BOARD *pos) {
+void board_reset(S_BOARD *pos) {
     int i = 0;
 
     for (i  = 0; i < BRD_SQ_NUM; i++){
@@ -264,7 +264,7 @@ void reset_board(S_BOARD *pos) {
     
 }
 
-void print_board(const S_BOARD *pos){
+void board_print(const S_BOARD *pos){
     int file, rank, sq, piece;
 
     printf("\nGame Board:\n\n");
