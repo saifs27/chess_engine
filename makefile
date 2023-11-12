@@ -4,7 +4,8 @@ SRC = src
 OBJ = obj
 SRCS = $(wildcard $(SRC)/*.c)
 OBJS = $(patsubst $(SRC)/%.c, $(OBJ)/%.o, $(SRCS))
-BIN = bin/engine
+BINDIR = bin
+BIN = $(BINDIR)/engine
 RM = del
 
 all: $(BIN)
@@ -16,5 +17,5 @@ $(OBJ)/%.o: $(SRC)/%.c
 	$(CC) -c $< -o $@
 
 clean:
-	$(RM) bin/* obj/*
+	$(RM) $(BINDIR)\* $(OBJ)\*
 
