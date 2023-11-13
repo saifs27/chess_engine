@@ -2,6 +2,7 @@
 
 #include <stdlib.h>
 
+
 #define DEBUG
 
 #ifndef DEBUG
@@ -13,7 +14,7 @@ printf("%s - Failed ", #n); \
 printf("On %s ", __DATE__); \
 printf("At %s ", __TIME__); \
 printf("In File %s ", __FILE__); \
-printf("At Line %s\n", __LINE__); \
+printf("At Line %d\n", __LINE__); \
 exit(1);}
 #endif
 
@@ -198,3 +199,10 @@ extern void add_move_quiet(const S_BOARD *pos, int move, S_MOVELIST *list);
 extern void add_move_capture(const S_BOARD *pos, int move, S_MOVELIST *list);
 extern void add_move_enPassant(const S_BOARD *pos, int move, S_MOVELIST *list);
 extern void generate_all_moves(const S_BOARD *pos, S_MOVELIST *list);
+
+// validate.c
+extern int square_on_board(const int sq);
+extern int valid_side(const int side);
+extern int valid_fileRank(const int fileRank);
+extern int valid_empty_piece(const int piece);
+extern int valid_piece(const int piece);
