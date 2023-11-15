@@ -1,4 +1,6 @@
+#include <stdio.h>
 #include "defs.h"
+
 
 const int KnightDirection[8] = {-8, -19, -21, -12, 8, 19, 21, 12}; // knight
 const int RookDirection[8] = {-1, -10, 1, 10}; // rook
@@ -7,6 +9,10 @@ const int KingDirection[8] = {-1, -10, 1, 10, -9, -11, 11, 9}; // king
 
 int square_attacked(const int sq, const int side, const S_BOARD *pos){
     int pce, i, t_sq, dir;
+
+    ASSERT(square_on_board(sq));
+    ASSERT(valid_side(side));
+    ASSERT(board_check(pos));
     // pawns
     if (side == WHITE){
         if (pos -> pieces[sq-11] == wP || pos -> pieces[sq - 9] == wP){

@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include "defs.h"
 
+#define MOVE(from,to,capture,promote,fl) ( (from) | ((to) << 7) | ((capture) << 14) | (promote)<< 20 | (fl))
+#define SQUARE_OFFBOARD(sq) (FilesBoard[(sq)]==OFFBOARD)
+
 
 void add_move_quiet(const S_BOARD *pos, int move, S_MOVELIST *list) {
     list->moves[list->count].move = move;

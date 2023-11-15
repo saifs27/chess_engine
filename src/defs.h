@@ -82,7 +82,7 @@ typedef struct{
     int enPassant; 
     int fiftyMove; 
 
-    int ply; // number of half-moves
+    int ply; // half-moves
     int hisPly;
 
     U64 positionKey; 
