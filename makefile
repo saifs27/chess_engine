@@ -1,21 +1,22 @@
-CC = g++
-CFLAGS = -c -Wall
-SRC = src
-OBJ = obj
-SRCS = $(wildcard $(SRC)/*.c)
-OBJS = $(patsubst $(SRC)/%.c, $(OBJ)/%.o, $(SRCS))
-BINDIR = bin
-BIN = $(BINDIR)/engine
-RM = del
+CC=g++
+CFLAGS=-g -Wall
+SRC=src
+OBJ=obj
+BINDIR=bin
+BIN=$(BINDIR)/engine
+SRCS=$(wildcard $(SRC)/*.c)
+OBJS=$(patsubst $(SRC)/%.c, $(OBJ)/%.o, $(SRCS))
+TESTBINS=$(patsubst $(TEST)/)
+RM = rm
 
 all: $(BIN)
 
 $(BIN): $(OBJS)
-	$(CC) $(OBJS) -o $@
+	$(CC) $(CFLAGS) $(OBJS) -o $@
 
 $(OBJ)/%.o: $(SRC)/%.c
-	$(CC) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	$(RM) $(BINDIR)\* $(OBJ)\*
+	$(RM) $(BINDIR)/* $(OBJ)/*
 
